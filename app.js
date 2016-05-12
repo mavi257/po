@@ -25,28 +25,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require('stylus').middleware({ src: __dirname + '/app/public' }));
 app.use(express.static(__dirname + '/app/public'));
 
-var Db = require('mongodb').Db,
-    MongoClient = require('mongodb').MongoClient,
-    Server = require('mongodb').Server,
-    ReplSetServers = require('mongodb').ReplSetServers,
-    ObjectID = require('mongodb').ObjectID,
-    Binary = require('mongodb').Binary,
-    GridStore = require('mongodb').GridStore,
-    Grid = require('mongodb').Grid,
-    Code = require('mongodb').Code,
-   
-    assert = require('assert');
-var db = new Db('qw', new Server('ds019482.mlab.com', 19482));
-  // Establish connection to db
-  db.open(function(e, db) {
-    assert.equal(null, e);
+// build mongo database connection url //
 
-				db.authenticate('v', 'v', function(e, d) {
-        assert.equal(true, d);
-				
-				});
-			});
+var dbHost = process.env.DB_HOST || 'localhost'
+var dbPort = process.env.DB_PORT || 27017;
+var dbName = process.env.DB_NAME || 'node-login';
 
+var dbURL = 'mongodb://'+dbHost+':'+dbPort+'/'+dbName;
+if (app.get('env') == 'live'){
+// prepend url with authentication credentials // 
+	dbURL = 'mongodb://'+process.env.DB_USER+':'+process.env.DB_PASS+'@'+dbHost+':'+dbPort+'/'+dbName;
+}
+
+app.use(session({
+	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
+	proxy: true,
+	resave: true,
+	saveUninitialized: true,
+	store: new MongoStore({ url: dbURL })
+	})
+);
 
 require('./app/server/routes')(app);
 
