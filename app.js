@@ -27,14 +27,14 @@ app.use(express.static(__dirname + '/app/public'));
 
 // build mongo database connection url //
 
-var dbHost = process.env.DB_HOST || 'localhost'
-var dbPort = process.env.DB_PORT || 27017;
-var dbName = process.env.DB_NAME || 'admin';
+var dbHost = process.env.DB_HOST || 'ds019482.mlab.com'
+var dbPort = process.env.DB_PORT || 19482;
+var dbName = process.env.DB_NAME || 'qw';
 
 var dbURL = 'mongodb://'+dbHost+':'+dbPort+'/'+dbName;
 if (app.get('env') == 'live'){
 // prepend url with authentication credentials // 
-	dbURL = 'mongodb://'+process.env.DB_USER+':'+process.env.DB_PASS+'@'+dbHost+':'+dbPort+'/'+dbName;
+	dbURL = 'mongodb://'v':'v'@'+dbHost+':'+dbPort+'/'+dbName;
 }
 
 app.use(session({
