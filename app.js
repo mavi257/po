@@ -25,18 +25,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require('stylus').middleware({ src: __dirname + '/app/public' }));
 app.use(express.static(__dirname + '/app/public'));
 
-// build mongo database connection url //
+var Db = require('mongodb').Db,
+    MongoClient = require('mongodb').MongoClient,
+    Server = require('mongodb').Server,
+    ReplSetServers = require('mongodb').ReplSetServers,
+    ObjectID = require('mongodb').ObjectID,
+    Binary = require('mongodb').Binary,
+    GridStore = require('mongodb').GridStore,
+    Grid = require('mongodb').Grid,
+    Code = require('mongodb').Code,
+   
+    assert = require('assert');
+var db = new Db('qw', new Server('ds019482.mlab.com', 19482));
+  // Establish connection to db
+  db.open(function(e, db) {
+    assert.equal(null, e);
 
-var dbHost = process.env.DB_HOST || 'ds019482.mlab.com'
-var dbPort = process.env.DB_PORT || 19482;
-var dbName = process.env.DB_NAME || 'qw';
-
-var dbURL = 'mongodb://'+dbHost+':'+dbPort+'/'+dbName;
-if (app.get('env') == 'live'){
-// prepend url with authentication credentials // 
-	dbURL = 'mongodb://'v':'v'@'+dbHost+':'+dbPort+'/'+dbName;
-}
-
+				db.authenticate('v', 'v', function(e, d) {
+        assert.equal(true, d);
+				
+				});
+			});
 app.use(session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
 	proxy: true,
