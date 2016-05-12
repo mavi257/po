@@ -8,9 +8,33 @@ var moment 		= require('moment');
 	ESTABLISH DATABASE CONNECTION
 */
 
-var dbURL = 'mongodb://vi:123@ds019482.mlab.com:19482/as';
+var dbName = process.env.DB_NAME || 'as';
+var dbHost = process.env.DB_HOST || 'ds019482.mlab.com'
+var dbPort = process.env.DB_PORT || 19482;
+var dbu = process.env.DB_USER || 'vi';
+var dbp = process.env.DB_PASS || '123';
 
-var accounts = db.collection('accounts');
+var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1});
+db.open(function(e, d){
+	if (e) {
+		console.log(e);
+	} else {
+		if (process.env.NODE_ENV == 'live') {
+			db.authenticate(dbu, dbp, function(e, res) {
+				if (e) {
+					console.log('mongo :: error: not authenticated', e);
+				}
+				else {
+					console.log('mongo :: authenticated and connected to database :: "'+dbName+'"');
+				}
+			});
+		}	else{
+			console.log('mongo :: connected to database :: "'+dbName+'"');
+		}
+	}
+});
+
+var accounts = db.collection('users');
 
 /* login validation methods */
 
