@@ -28,8 +28,12 @@ app.use(express.static(__dirname + '/app/public'));
 // build mongo database connection url //
 
 
-	var dbURL = 'mongodb://vi:123@ds019482.mlab.com:19482/as';
 
+var dbURL = 'mongodb://ds019482.mlab.com:19482/as';
+if (app.get('env') == 'live'){
+// prepend url with authentication credentials // 
+	dbURL = 'mongodb://vi:123@ds019482.mlab.com:19482/as';
+}
 
 app.use(session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',

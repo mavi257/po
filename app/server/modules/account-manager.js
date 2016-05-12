@@ -8,11 +8,11 @@ var moment 		= require('moment');
 	ESTABLISH DATABASE CONNECTION
 */
 
-var dbName = process.env.DB_NAME || 'as';
-var dbHost = process.env.DB_HOST || 'ds019482.mlab.com'
-var dbPort = process.env.DB_PORT || 19482;
-var dbu = process.env.DB_USER || 'vi';
-var dbp = process.env.DB_PASS || '123';
+var dbName = 'as';
+var dbHost = 'ds019482.mlab.com'
+var dbPort = 19482;
+var dbus = 'vi';
+var dbpa = '123';
 
 var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1});
 db.open(function(e, d){
@@ -20,7 +20,7 @@ db.open(function(e, d){
 		console.log(e);
 	} else {
 		if (process.env.NODE_ENV == 'live') {
-			db.authenticate(dbu, dbp, function(e, res) {
+			db.authenticate(dbus, dbpa, function(e, res) {
 				if (e) {
 					console.log('mongo :: error: not authenticated', e);
 				}
@@ -34,7 +34,7 @@ db.open(function(e, d){
 	}
 });
 
-var accounts = db.collection('users');
+var accounts = db.collection('accounts');
 
 /* login validation methods */
 
