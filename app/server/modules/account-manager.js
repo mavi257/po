@@ -1,38 +1,30 @@
 
 var crypto 		= require('crypto');
-var MongoDB 	= require('mongodb').Db;
-var Server 		= require('mongodb').Server;
+
 var moment 		= require('moment');
+var Db = require('mongodb').Db,
+    MongoClient = require('mongodb').MongoClient,
+    Server = require('mongodb').Server,
+    ReplSetServers = require('mongodb').ReplSetServers,
+    ObjectID = require('mongodb').ObjectID,
+    Binary = require('mongodb').Binary,
+    GridStore = require('mongodb').GridStore,
+    Grid = require('mongodb').Grid,
+    Code = require('mongodb').Code,
+   
+    assert = require('assert');
+var db = new Db('qw', new Server('ds019482.mlab.com', 19482));
+  // Establish connection to db
+  db.open(function(e, db) {
+    assert.equal(null, e);
 
-/*
-	ESTABLISH DATABASE CONNECTION
-*/
-
-var dbHost = process.env.DB_HOST || 'ds021182.mlab.com'
-var dbPort = process.env.DB_PORT || 21182;
-var dbName = process.env.DB_NAME || 'zz';
-var dbuser = process.env.DB_USER || 'v';
-var dbpass = process.env.DB_PASS || 'as';
-
-var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1});
-db.open(function(e, d){
-	if (e) {
-		console.log(e);
-	} else {
-		if (process.env.NODE_ENV == 'live') {
-			db.authenticate(dbuser, dbpass, function(e, res) {
-				if (e) {
-					console.log('mongo :: error: not authenticated', e);
-				}
-				else {
-					console.log('mongo :: authenticated and connected to database :: "'+dbName+'"');
-				}
+				db.authenticate('v', 'v', function(e, d) {
+        assert.equal(true, d);
+				
+				});
 			});
-		}	else{
-			console.log('mongo :: connected to database :: "'+dbName+'"');
-		}
-	}
-});
+		
+
 
 var accounts = db.collection('accounts');
 
